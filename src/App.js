@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Pagination, ItemsGrid, useData, Header, AppState } from './components';
 
-export default function App() {
+export const App = () => {
   const { isFetching, isError } = useData();
 
   return (
@@ -19,7 +19,7 @@ export default function App() {
       )}
     </Main>
   );
-}
+};
 
 const Main = styled.main`
   height: 100%;
