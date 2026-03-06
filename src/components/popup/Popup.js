@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { PopupEpisodes } from './PopupEpisodes';
 import { PopupHeader } from './PopupHeader';
@@ -26,6 +27,14 @@ export function Popup({ settings: { visible, content = {} }, setSettings }) {
       visible: !prevState.visible
     }));
   }
+
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [visible]);
 
   return (
     <PopupContainer visible={visible}>

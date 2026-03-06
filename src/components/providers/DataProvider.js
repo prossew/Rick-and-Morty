@@ -16,7 +16,23 @@ export function DataProvider({ children }) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [info, setInfo] = useState({});
-  const [apiURL, setApiURL] = useState(API_URL);
+  const [filters, setFilters] = useState({
+    name: '',
+    status: '',
+    gender: '',
+    type: ''
+  });
+
+  const buildURL = useCallback((filtersObj, page = 1) => {
+    const params = new URLSearchParams({ page });
+    Object.entries(filtersObj).forEach(([key, val]) => {
+      if (val) params.set(key, val);
+    });
+
+    return `${API_URL}?${params.toString()}`;
+  }, []);
+
+  const [apiURL, setApiURL] = useState(() => buildURL({}, 1));
 
   const fetchData = useCallback(async (url) => {
     setIsFetching(true);
@@ -33,9 +49,19 @@ export function DataProvider({ children }) {
       setIsFetching(false);
     }
   }, []);
+
   useEffect(() => {
     fetchData(apiURL);
   }, [apiURL, fetchData]);
+
+  const applyFilters = useCallback(
+    (newFilters) => {
+      setActivePage(0);
+      setFilters(newFilters);
+      setApiURL(buildURL(newFilters, 1));
+    },
+    [buildURL]
+  );
 
   const dataValue = useMemo(
     () => ({
@@ -46,9 +72,20 @@ export function DataProvider({ children }) {
       characters,
       isFetching,
       isError,
-      info
+      info,
+      filters,
+      applyFilters
     }),
-    [activePage, apiURL, characters, isFetching, isError, info]
+    [
+      activePage,
+      apiURL,
+      characters,
+      isFetching,
+      isError,
+      info,
+      filters,
+      applyFilters
+    ]
   );
 
   return (
