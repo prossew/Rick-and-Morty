@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
 import { useData } from '../providers';
 
 const EMPTY_FILTERS = {
