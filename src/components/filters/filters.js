@@ -1,10 +1,13 @@
+/* eslint-disable import/no-unused-modules */
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useData } from '../providers';
+import { Select } from '../common/Select';
+import styled from 'styled-components';
 
 const EMPTY_FILTERS = {
   name: '',
-  stuts: '',
+  status: '',
   gender: '',
   species: '',
   type: ''
@@ -42,7 +45,7 @@ export function Filters() {
 
   return (
     <div>
-      <input
+      <StyledInput
         placeholder="Name"
         value={local.name}
         onChange={(e) =>
@@ -50,59 +53,109 @@ export function Filters() {
         }
       />
 
-      <input
+      <StyledInput
         placeholder="Type"
         value={local.type}
         onChange={(e) =>
           setLocal((prev) => ({ ...prev, type: e.target.value }))
         }
       />
-
-      <select
+      <Select
+        placeholder="Species"
         value={local.species}
-        onChange={(e) =>
-          setLocal((prev) => ({ ...prev, species: e.target.value }))
-        }
-      >
-        <option value="">Species</option>
-        <option value="Human">Human</option>
-        <option value="Alien">Alien</option>
-        <option value="Humanoid">Humanoid</option>
-        <option value="Poopybutthole">Poopybutthole</option>
-        <option value="Mythological Creature">Mythological Creature</option>
-        <option value="Animal">Animal</option>
-        <option value="Robot">Robot</option>
-        <option value="Cronenberg">Cronenberg</option>
-        <option value="Disease">Disease</option>
-        <option value="unknown">Unknown</option>
-      </select>
+        onChange={(val) => setLocal((prev) => ({ ...prev, species: val }))}
+        options={[
+          { value: 'Human', label: 'Human' },
+          { value: 'Alien', label: 'Alien' },
+          { value: 'Humanoid', label: 'Humanoid' },
+          { value: 'Poopybutthole', label: 'Poopybutthole' },
+          { value: 'Mythological Creature', label: 'Mythological Creature' },
+          { value: 'Animal', label: 'Animal' },
+          { value: 'Robot', label: 'Robot' },
+          { value: 'Cronenberg', label: 'Cronenberg' },
+          { value: 'Disease', label: 'Disease' },
+          { value: 'unknown', label: 'Unknown' }
+        ]}
+      />
 
-      <select
+      <Select
+        placeholder="Status"
         value={local.status}
-        onChange={(e) =>
-          setLocal((prev) => ({ ...prev, status: e.target.value }))
-        }
-      >
-        <option value="">Status</option>
-        <option value="alive">Alive</option>
-        <option value="dead">Dead</option>
-        <option value="unknown">Unknown</option>
-      </select>
+        onChange={(val) => setLocal((prev) => ({ ...prev, status: val }))}
+        options={[
+          { value: 'alive', label: 'Alive' },
+          { value: 'dead', label: 'Dead' },
+          { value: 'unknown', label: 'Unknown' }
+        ]}
+      />
 
-      <select
+      <Select
+        placeholder="Gender"
         value={local.gender}
-        onChange={(e) =>
-          setLocal((prev) => ({ ...prev, gender: e.target.value }))
-        }
-      >
-        <option value="">Gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="genderless">Genderless</option>
-        <option value="unknown">Unknown</option>
-      </select>
-      <button onClick={handleApply}>Apply</button>
-      <button onClick={handleReset}>Reset</button>
+        onChange={(val) => setLocal((prev) => ({ ...prev, gender: val }))}
+        options={[
+          { value: 'male', label: 'Male' },
+          { value: 'female', label: 'Female' },
+          { value: 'genderless', label: 'Genderless' },
+          { value: 'unknown', label: 'Unknown' }
+        ]}
+      />
+      <ApplyButton onClick={handleApply}>Apply</ApplyButton>
+      <ResetButton onClick={handleReset}>Reset</ResetButton>
     </div>
   );
 }
+
+const StyledInput = styled.input`
+  background: #263750;
+  border: 1px solid #83bf46;
+  border-radius: 8px;
+  color: #fff;
+  width: 180px;
+  height: 40px;
+  font-size: 14px;
+  text-align: start;
+  padding-left: 10px;
+  outline: none;
+
+  &::placeholder {
+    color: #aaa;
+  }
+
+  &:hover,
+  &:focus {
+    background: #1a2a3a;
+  }
+`;
+
+const ApplyButton = styled.button`
+  background: #263750;
+  border: 1px solid #83bf46;
+  border-radius: 8px;
+  color: #83bf46;
+  width: 85px;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #1a2a3a;
+  }
+`;
+
+const ResetButton = styled.button`
+  background: #263750;
+  border: 1px solid #ff5152;
+  border-radius: 8px;
+  color: #ff5152;
+  width: 85px;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #1a2a3a;
+  }
+`;
