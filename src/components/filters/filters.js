@@ -44,67 +44,90 @@ export function Filters() {
   };
 
   return (
-    <div>
-      <StyledInput
-        placeholder="Name"
-        value={local.name}
-        onChange={(e) =>
-          setLocal((prev) => ({ ...prev, name: e.target.value }))
-        }
-      />
+    <FiltersContainer>
+      <FiltersRow>
+        <Select
+          placeholder="Status"
+          value={local.status}
+          onChange={(val) => setLocal((prev) => ({ ...prev, status: val }))}
+          options={[
+            { value: 'alive', label: 'Alive' },
+            { value: 'dead', label: 'Dead' },
+            { value: 'unknown', label: 'Unknown' }
+          ]}
+        />
+        <Select
+          placeholder="Gender"
+          value={local.gender}
+          onChange={(val) => setLocal((prev) => ({ ...prev, gender: val }))}
+          options={[
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' },
+            { value: 'genderless', label: 'Genderless' },
+            { value: 'unknown', label: 'Unknown' }
+          ]}
+        />
+        <Select
+          placeholder="Species"
+          value={local.species}
+          onChange={(val) => setLocal((prev) => ({ ...prev, species: val }))}
+          options={[
+            { value: 'Human', label: 'Human' },
+            { value: 'Alien', label: 'Alien' },
+            { value: 'Humanoid', label: 'Humanoid' },
+            { value: 'Poopybutthole', label: 'Poopybutthole' },
+            { value: 'Mythological Creature', label: 'Mythological Creature' },
+            { value: 'Animal', label: 'Animal' },
+            { value: 'Robot', label: 'Robot' },
+            { value: 'Cronenberg', label: 'Cronenberg' },
+            { value: 'Disease', label: 'Disease' },
+            { value: 'unknown', label: 'Unknown' }
+          ]}
+        />
+      </FiltersRow>
 
-      <StyledInput
-        placeholder="Type"
-        value={local.type}
-        onChange={(e) =>
-          setLocal((prev) => ({ ...prev, type: e.target.value }))
-        }
-      />
-      <Select
-        placeholder="Species"
-        value={local.species}
-        onChange={(val) => setLocal((prev) => ({ ...prev, species: val }))}
-        options={[
-          { value: 'Human', label: 'Human' },
-          { value: 'Alien', label: 'Alien' },
-          { value: 'Humanoid', label: 'Humanoid' },
-          { value: 'Poopybutthole', label: 'Poopybutthole' },
-          { value: 'Mythological Creature', label: 'Mythological Creature' },
-          { value: 'Animal', label: 'Animal' },
-          { value: 'Robot', label: 'Robot' },
-          { value: 'Cronenberg', label: 'Cronenberg' },
-          { value: 'Disease', label: 'Disease' },
-          { value: 'unknown', label: 'Unknown' }
-        ]}
-      />
-
-      <Select
-        placeholder="Status"
-        value={local.status}
-        onChange={(val) => setLocal((prev) => ({ ...prev, status: val }))}
-        options={[
-          { value: 'alive', label: 'Alive' },
-          { value: 'dead', label: 'Dead' },
-          { value: 'unknown', label: 'Unknown' }
-        ]}
-      />
-
-      <Select
-        placeholder="Gender"
-        value={local.gender}
-        onChange={(val) => setLocal((prev) => ({ ...prev, gender: val }))}
-        options={[
-          { value: 'male', label: 'Male' },
-          { value: 'female', label: 'Female' },
-          { value: 'genderless', label: 'Genderless' },
-          { value: 'unknown', label: 'Unknown' }
-        ]}
-      />
-      <ApplyButton onClick={handleApply}>Apply</ApplyButton>
-      <ResetButton onClick={handleReset}>Reset</ResetButton>
-    </div>
+      <FiltersRow>
+        <StyledInput
+          placeholder="Name"
+          value={local.name}
+          onChange={(e) =>
+            setLocal((prev) => ({ ...prev, name: e.target.value }))
+          }
+        />
+        <StyledInput
+          placeholder="Type"
+          value={local.type}
+          onChange={(e) =>
+            setLocal((prev) => ({ ...prev, type: e.target.value }))
+          }
+        />
+        <ApplyButton onClick={handleApply}>Apply</ApplyButton>
+        <ResetButton onClick={handleReset}>Reset</ResetButton>
+      </FiltersRow>
+    </FiltersContainer>
   );
 }
+
+const FiltersContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (max-width: 530px) {
+    width: 50%;
+  }
+`;
+
+const FiltersRow = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  @media (max-width: 530px) {
+    flex-direction: column;
+    width: 240px;
+  }
+`;
 
 const StyledInput = styled.input`
   background: #263750;
@@ -114,9 +137,12 @@ const StyledInput = styled.input`
   width: 180px;
   height: 40px;
   font-size: 14px;
-  text-align: start;
   padding-left: 10px;
   outline: none;
+
+  @media (max-width: 530px) {
+    width: 240px;
+  }
 
   &::placeholder {
     color: #aaa;
@@ -129,7 +155,7 @@ const StyledInput = styled.input`
 `;
 
 const ApplyButton = styled.button`
-  background: #263750;
+  background: #001832;
   border: 1px solid #83bf46;
   border-radius: 8px;
   color: #83bf46;
@@ -139,13 +165,17 @@ const ApplyButton = styled.button`
   cursor: pointer;
   transition: background 0.2s;
 
+  @media (max-width: 530px) {
+    width: 240px;
+  }
+
   &:hover {
     background: #1a2a3a;
   }
 `;
 
 const ResetButton = styled.button`
-  background: #263750;
+  background: #001832;
   border: 1px solid #ff5152;
   border-radius: 8px;
   color: #ff5152;
@@ -154,6 +184,10 @@ const ResetButton = styled.button`
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s;
+
+  @media (max-width: 530px) {
+    width: 240px;
+  }
 
   &:hover {
     background: #1a2a3a;

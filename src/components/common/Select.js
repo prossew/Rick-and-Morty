@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { ReactComponent as ChevronDown } from '../../assets/Chevron-down.svg';
 
 export function Select({ value, onChange, options, placeholder }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ export function Select({ value, onChange, options, placeholder }) {
         {value ? (
           <Icon onClick={handleClear}>✕</Icon>
         ) : (
-          <Icon>{isOpen ? '▲' : '▼'}</Icon>
+          <Icon>{isOpen ? '▲' : <ChevronDown />}</Icon>
         )}
       </Field>
 
@@ -63,12 +64,19 @@ export function Select({ value, onChange, options, placeholder }) {
 const Container = styled.div`
   position: relative;
   width: 180px;
+
+  @media (max-width: 530px) {
+    width: 100%;
+  }
 `;
 
 const Field = styled.div`
   display: flex;
   align-items: center;
-  gap: 80px;
+  text-align: center;
+  justify-content: space-between;
+  padding-right: 10px;
+  padding-left: 10px;
   width: 180px;
   height: 40px;
   background: ${({ $active }) => ($active ? '#1a2a3a' : '#263750')};
@@ -80,6 +88,9 @@ const Field = styled.div`
 
   &:hover {
     background: #1a2a3a;
+  }
+  @media (max-width: 530px) {
+    width: 240px;
   }
 `;
 
