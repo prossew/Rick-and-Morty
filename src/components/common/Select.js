@@ -1,6 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ChevronDown } from '../../assets/Chevron-down.svg';
+
+const SelectOption = memo(({ option, onSelect, isSelected }) => {
+  const handleClick = useCallback(() => {
+    onSelect(option.value);
+  }, [option.value, onSelect]);
+
+  return (
+    <Option onClick={handleClick} $selected={isSelected}>
+      {option.label}
+    </Option>
+  );
+});
 
 export function Select({ value, onChange, options, placeholder }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,15 +20,25 @@ export function Select({ value, onChange, options, placeholder }) {
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
 
-  const handleSelect = (optionValue) => {
-    onChange(optionValue);
-    setIsOpen(false);
-  };
+  const handleToggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
 
-  const handleClear = (e) => {
-    e.stopPropagation();
-    onChange('');
-  };
+  const handleSelect = useCallback(
+    (optionValue) => {
+      onChange(optionValue);
+      setIsOpen(false);
+    },
+    [onChange]
+  );
+
+  const handleClear = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onChange('');
+    },
+    [onChange]
+  );
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -32,7 +54,7 @@ export function Select({ value, onChange, options, placeholder }) {
 
   return (
     <Container ref={ref}>
-      <Field onClick={() => setIsOpen((prev) => !prev)} $active={isOpen}>
+      <Field onClick={handleToggle} $active={isOpen}>
         <FieldText $hasValue={!!value}>
           {selectedLabel || placeholder}
         </FieldText>
@@ -47,13 +69,12 @@ export function Select({ value, onChange, options, placeholder }) {
       {isOpen && (
         <Dropdown>
           {options.map((option) => (
-            <Option
+            <SelectOption
               key={option.value}
-              onClick={() => handleSelect(option.value)}
-              $selected={option.value === value}
-            >
-              {option.label}
-            </Option>
+              option={option}
+              onSelect={handleSelect}
+              isSelected={option.value === value}
+            />
           ))}
         </Dropdown>
       )}
@@ -89,6 +110,7 @@ const Field = styled.div`
   &:hover {
     background: #1a2a3a;
   }
+
   @media (max-width: 530px) {
     width: 240px;
   }
@@ -107,6 +129,12 @@ const Icon = styled.span`
   font-size: 12px;
   margin-left: 8px;
   flex-shrink: 0;
+  transition: color 0.2s;
+  pointer-events: auto;
+
+  &:hover {
+    color: #83bf46;
+  }
 `;
 
 const Dropdown = styled.div`

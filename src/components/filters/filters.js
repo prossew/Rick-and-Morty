@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unused-modules */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useData } from '../providers';
 import { Select } from '../common/Select';
@@ -12,6 +12,32 @@ const EMPTY_FILTERS = {
   species: '',
   type: ''
 };
+
+const STATUS_OPTIONS = [
+  { value: 'alive', label: 'Alive' },
+  { value: 'dead', label: 'Dead' },
+  { value: 'unknown', label: 'Unknown' }
+];
+
+const GENDER_OPTIONS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'genderless', label: 'Genderless' },
+  { value: 'unknown', label: 'Unknown' }
+];
+
+const SPECIES_OPTIONS = [
+  { value: 'Human', label: 'Human' },
+  { value: 'Alien', label: 'Alien' },
+  { value: 'Humanoid', label: 'Humanoid' },
+  { value: 'Poopybutthole', label: 'Poopybutthole' },
+  { value: 'Mythological Creature', label: 'Mythological Creature' },
+  { value: 'Animal', label: 'Animal' },
+  { value: 'Robot', label: 'Robot' },
+  { value: 'Cronenberg', label: 'Cronenberg' },
+  { value: 'Disease', label: 'Disease' },
+  { value: 'unknown', label: 'Unknown' }
+];
 
 export function Filters() {
   const { applyFilters } = useData();
@@ -30,18 +56,43 @@ export function Filters() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleApply = () => {
+  const handleStatusChange = useCallback(
+    (val) => setLocal((prev) => ({ ...prev, status: val })),
+    []
+  );
+
+  const handleGenderChange = useCallback(
+    (val) => setLocal((prev) => ({ ...prev, gender: val })),
+    []
+  );
+
+  const handleSpeciesChange = useCallback(
+    (val) => setLocal((prev) => ({ ...prev, species: val })),
+    []
+  );
+
+  const handleNameChange = useCallback(
+    (e) => setLocal((prev) => ({ ...prev, name: e.target.value })),
+    []
+  );
+
+  const handleTypeChange = useCallback(
+    (e) => setLocal((prev) => ({ ...prev, type: e.target.value })),
+    []
+  );
+
+  const handleApply = useCallback(() => {
     setSearchParams(
       Object.fromEntries(Object.entries(local).filter(([, val]) => val))
     );
     applyFilters(local);
-  };
+  }, [local, applyFilters, setSearchParams]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setLocal(EMPTY_FILTERS);
     setSearchParams({});
     applyFilters(EMPTY_FILTERS);
-  };
+  }, [applyFilters, setSearchParams]);
 
   return (
     <FiltersContainer>
@@ -49,40 +100,20 @@ export function Filters() {
         <Select
           placeholder="Status"
           value={local.status}
-          onChange={(val) => setLocal((prev) => ({ ...prev, status: val }))}
-          options={[
-            { value: 'alive', label: 'Alive' },
-            { value: 'dead', label: 'Dead' },
-            { value: 'unknown', label: 'Unknown' }
-          ]}
+          onChange={handleStatusChange}
+          options={STATUS_OPTIONS}
         />
         <Select
           placeholder="Gender"
           value={local.gender}
-          onChange={(val) => setLocal((prev) => ({ ...prev, gender: val }))}
-          options={[
-            { value: 'male', label: 'Male' },
-            { value: 'female', label: 'Female' },
-            { value: 'genderless', label: 'Genderless' },
-            { value: 'unknown', label: 'Unknown' }
-          ]}
+          onChange={handleGenderChange}
+          options={GENDER_OPTIONS}
         />
         <Select
           placeholder="Species"
           value={local.species}
-          onChange={(val) => setLocal((prev) => ({ ...prev, species: val }))}
-          options={[
-            { value: 'Human', label: 'Human' },
-            { value: 'Alien', label: 'Alien' },
-            { value: 'Humanoid', label: 'Humanoid' },
-            { value: 'Poopybutthole', label: 'Poopybutthole' },
-            { value: 'Mythological Creature', label: 'Mythological Creature' },
-            { value: 'Animal', label: 'Animal' },
-            { value: 'Robot', label: 'Robot' },
-            { value: 'Cronenberg', label: 'Cronenberg' },
-            { value: 'Disease', label: 'Disease' },
-            { value: 'unknown', label: 'Unknown' }
-          ]}
+          onChange={handleSpeciesChange}
+          options={SPECIES_OPTIONS}
         />
       </FiltersRow>
 
@@ -90,16 +121,12 @@ export function Filters() {
         <StyledInput
           placeholder="Name"
           value={local.name}
-          onChange={(e) =>
-            setLocal((prev) => ({ ...prev, name: e.target.value }))
-          }
+          onChange={handleNameChange}
         />
         <StyledInput
           placeholder="Type"
           value={local.type}
-          onChange={(e) =>
-            setLocal((prev) => ({ ...prev, type: e.target.value }))
-          }
+          onChange={handleTypeChange}
         />
         <ApplyButton onClick={handleApply}>Apply</ApplyButton>
         <ResetButton onClick={handleReset}>Reset</ResetButton>
@@ -130,6 +157,9 @@ const FiltersRow = styled.div`
 `;
 
 const StyledInput = styled.input`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   background: #263750;
   border: 1px solid #83bf46;
   border-radius: 8px;
@@ -148,7 +178,6 @@ const StyledInput = styled.input`
     color: #aaa;
   }
 
-  &:hover,
   &:focus {
     background: #1a2a3a;
   }
@@ -170,7 +199,8 @@ const ApplyButton = styled.button`
   }
 
   &:hover {
-    background: #1a2a3a;
+    background: #83bf46;
+    color: #f5f5f5;
   }
 `;
 
@@ -191,5 +221,6 @@ const ResetButton = styled.button`
 
   &:hover {
     background: #1a2a3a;
+    color: #fff;
   }
 `;
