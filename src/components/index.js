@@ -3,4 +3,4 @@ export { Header } from './header';
 export { ItemsGrid } from './ItemsGrid';
 export { DataProvider, useData } from './providers';
 export { AppState } from './AppState';
-export { Filters } from './filters';
+export { Filters } from './filters/Filters';

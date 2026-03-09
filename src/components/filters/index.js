@@ -1,2 +1,2 @@
 /* eslint-disable import/no-unused-modules */
-export { Filters } from './Filters.js';
+export { Filters } from './Filters';
